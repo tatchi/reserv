@@ -8,6 +8,52 @@ let reloadScript = "
     source.onmessage = e => location.reload(true);
 </script>";
 
+let (st, push) = Lwt_stream.create();
+
+let stream =
+  Lwt_stream.map(
+    data => {
+      Console.log("cool");
+      data;
+    },
+    st,
+  );
+
+let watcher = Luv.FS_event.init() |> Result.get_ok;
+
+let fswatch =
+  Luv.FS_event.start(
+    watcher,
+    "index.html",
+    fun
+    | Error(e) => {
+        Console.log("error");
+      }
+    | Ok((file, events)) => {
+        if (List.mem(`RENAME, events)) {
+          Console.log("rename");
+        };
+        if (List.mem(`CHANGE, events)) {
+          Console.log("change");
+          push(Some("changes appened"));
+        };
+      },
+  );
+
+// let other =
+//   Lwt_main.run(
+//     {
+//       let (st, push) = Lwt_stream.create();
+//       Console.log("in");
+//       let _ = Lwt_stream.iter(data => {Console.log(data)}, st);
+
+//       push(Some("hey11"));
+
+//       Lwt_unix.sleep(5.);
+//     },
+//   );
+let threadFs = Luv.Thread.create(_ => fswatch) |> Result.get_ok;
+
 let handler = (request: Morph.Request.t(string)) => {
   open Morph;
 
@@ -56,22 +102,16 @@ let reload_server = Morph_server_http.make(~port=5005, ());
 
 let reloadServerHandler = (request: Morph.Request.t(string)) => {
   open Morph;
-
   // let stream =
   //   Lwt_process.pread_lines(("esy", [|"esy", "fswatch", "index.html"|]));
-
-  let stream =
-    Lwt_process.pread_lines((
-      "esy",
-      [|"esy", "fswatch", "-l 0.1", "-e '.*/\..*'", "."|],
-    ));
-
-  print_endline("new handler");
-
+  // let stream =
+  //   Lwt_process.pread_lines((
+  //     "esy",
+  //     [|"esy", "fswatch", "-l 0.1", "-e '.*/\..*'", "."|],
+  //   ));
+  // print_endline("new handler");
   let e = "event: message\nid: 0\ndata: change received\n\n\n";
-
   // let (st, push) = Lwt_stream.create();
-
   // let _ = push(Some("event: message\nid: 0\ndata: awaiting changes\n\n\n"));
 
   Response.empty
@@ -101,4 +141,8 @@ let main = () => {
   ]);
 };
 
-Lwt_main.run(main());
+ignore(Luv.Thread.join(threadFs));
+
+Luv.Thread.create(_ => Lwt_main.run(main())) |> Result.get_ok;
+
+Luv.Loop.run();

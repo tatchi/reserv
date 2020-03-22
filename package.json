@@ -61,7 +61,7 @@
         "Luv = require('luv')"
       ],
       "bin": {
-        "ReservApp.exe": "Main.re"
+        "ReservApp.exe": "ReservApp.re"
       }
     }
   },
