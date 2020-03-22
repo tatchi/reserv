@@ -39,12 +39,25 @@
     "library": {
       "imports": [
         "Console = require('console/lib')",
-        "Pastel = require('pastel/lib')"
+        "Pastel = require('pastel/lib')",
+        "Morph = require('morph')",
+        "Mtime = require('mtime')",
+        "Mtime_clock = require('mtime/clock/os')",
+        "Logs = require('logs')",
+        "Lwt = require('lwt')"
       ]
     },
     "bin": {
       "imports": [
-        "Library = require('reserv/library')"
+        "Library = require('reserv/library')",
+        "Morph = require('morph')",
+        "Morph_base = require('morph_base')",
+        "Morph_server_http = require('morph_server_http')",
+        "Logs = require('logs')",
+        "Logs_fmt = require('logs/fmt')",
+        "Fmt_tty = require('fmt/tty')",
+        "Lwt = require('lwt')",
+        "Uri = require('uri')"
       ],
       "bin": {
         "ReservApp.exe": "ReservApp.re"
@@ -54,22 +67,29 @@
   "scripts": {
     "start": "esy x ReservApp.exe",
     "test": "esy x RunReservTests.exe",
+    "format": "dune build @fmt --auto-promote --root .",
     "doc": "esy dune build @doc",
     "doc-path": "esy echo #{self.target_dir}/default/_doc/_html/index.html"
   },
   "dependencies": {
+    "fswatch": "ulrikstrid/esy-fswatch:esy.json",
     "@opam/dune": "*",
     "@reason-native/console": "*",
     "@reason-native/pastel": "*",
     "@reason-native/rely": "*",
     "@esy-ocaml/reason": "*",
-    "ocaml": "~4.7.0",
-    "@pesy/esy-pesy": "0.1.0-alpha.8"
+    "ocaml": "~4.8.0",
+    "@pesy/esy-pesy": "0.1.0-alpha.8",
+    "@reason-native-web/morph": "^0.3.0",
+    "@reason-native-web/morph_base": "^0.3.0",
+    "@reason-native-web/morph_server_http": "^0.3.0",
+    "@opam/mtime": "*",
+    "@opam/uri": "*"
   },
   "devDependencies": {
     "refmterr": "*",
     "@opam/merlin": "*",
-    "ocaml": "~4.7.0",
+    "ocaml": "~4.8.0",
     "@opam/odoc": "*"
   }
 }
