@@ -1,0 +1,75 @@
+{
+  "name": "reserv",
+  "version": "0.1.0",
+  "description": "Starter Reason Esy Pesy Project",
+  "esy": {
+    "build": "dune build -p #{self.name}",
+    "buildDev": "pesy build",
+    "NOTE": "Optional release Section. Customizes result of `esy release`",
+    "release": {
+      "releasedBinaries": [
+        "ReservApp.exe"
+      ]
+    },
+    "buildEnv": {
+      "ODOC_SYNTAX": "re"
+    }
+  },
+  "buildDirs": {
+    "test": {
+      "imports": [
+        "Library = require('reserv/library')",
+        "Rely = require('rely/lib')"
+      ],
+      "flags": [
+        "-linkall",
+        "-g",
+        "-w",
+        "-9"
+      ]
+    },
+    "testExe": {
+      "imports": [
+        "Test = require('reserv/test')"
+      ],
+      "bin": {
+        "RunReservTests.exe": "RunReservTests.re"
+      }
+    },
+    "library": {
+      "imports": [
+        "Console = require('console/lib')",
+        "Pastel = require('pastel/lib')"
+      ]
+    },
+    "bin": {
+      "imports": [
+        "Library = require('reserv/library')"
+      ],
+      "bin": {
+        "ReservApp.exe": "ReservApp.re"
+      }
+    }
+  },
+  "scripts": {
+    "start": "esy x ReservApp.exe",
+    "test": "esy x RunReservTests.exe",
+    "doc": "esy dune build @doc",
+    "doc-path": "esy echo #{self.target_dir}/default/_doc/_html/index.html"
+  },
+  "dependencies": {
+    "@opam/dune": "*",
+    "@reason-native/console": "*",
+    "@reason-native/pastel": "*",
+    "@reason-native/rely": "*",
+    "@esy-ocaml/reason": "*",
+    "ocaml": "~4.7.0",
+    "@pesy/esy-pesy": "0.1.0-alpha.8"
+  },
+  "devDependencies": {
+    "refmterr": "*",
+    "@opam/merlin": "*",
+    "ocaml": "~4.7.0",
+    "@opam/odoc": "*"
+  }
+}
