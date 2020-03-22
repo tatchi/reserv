@@ -57,10 +57,11 @@
         "Logs_fmt = require('logs/fmt')",
         "Fmt_tty = require('fmt/tty')",
         "Lwt = require('lwt')",
-        "Uri = require('uri')"
+        "Uri = require('uri')",
+        "Luv = require('luv')"
       ],
       "bin": {
-        "ReservApp.exe": "ReservApp.re"
+        "ReservApp.exe": "Main.re"
       }
     }
   },
@@ -73,6 +74,7 @@
   },
   "dependencies": {
     "fswatch": "ulrikstrid/esy-fswatch:esy.json",
+    "@opam/luv": "*",
     "@opam/dune": "*",
     "@reason-native/console": "*",
     "@reason-native/pastel": "*",
