@@ -8,37 +8,19 @@ let reloadScript = "
     source.onmessage = e => location.reload(true);
 </script>";
 
-let (st, push) = Lwt_stream.create();
+let (stream, push) = Lwt_stream.create();
 
-let stream =
-  Lwt_stream.map(
-    data => {
-      Console.log("cool");
-      data;
-    },
-    st,
-  );
-
-let watcher = Luv.FS_event.init() |> Result.get_ok;
+let watcher = Luv.FS_poll.init() |> Result.get_ok;
 
 let fswatch =
-  Luv.FS_event.start(
-    watcher,
-    "index.html",
-    fun
-    | Error(e) => {
-        Console.log("error");
-      }
-    | Ok((file, events)) => {
-        if (List.mem(`RENAME, events)) {
-          Console.log("rename");
-        };
-        if (List.mem(`CHANGE, events)) {
-          Console.log("change");
-          push(Some("changes appened"));
-        };
-      },
-  );
+  Luv.FS_poll.start(~interval=10, watcher, "index.html", result => {
+    switch (result) {
+    | Error(_) => Console.log("error")
+    | Ok((fileStat1, fileStat2)) =>
+      Console.log("change");
+      push(Some("changes appened"));
+    }
+  });
 
 // let other =
 //   Lwt_main.run(
