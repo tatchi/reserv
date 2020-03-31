@@ -4,8 +4,11 @@ Logs.set_reporter(Logs_fmt.reporter());
 
 let reloadScript = "
 <script>
-    const source = new EventSource('http://localhost:5005');
-    source.onmessage = e => location.reload(true);
+    const source = new EventSource('/livereload');
+    const reload = ()=>location.reload(true);
+    source.onmessage = reload;
+    source.onerror = ()=>(source.onopen = reload);
+    console.log('[reserv] listening for file changes');
 </script>";
 
 let (stream, push) = Lwt_stream.create();
@@ -22,18 +25,6 @@ let fswatch =
     }
   });
 
-// let other =
-//   Lwt_main.run(
-//     {
-//       let (st, push) = Lwt_stream.create();
-//       Console.log("in");
-//       let _ = Lwt_stream.iter(data => {Console.log(data)}, st);
-
-//       push(Some("hey11"));
-
-//       Lwt_unix.sleep(5.);
-//     },
-//   );
 let threadFs = Luv.Thread.create(_ => fswatch) |> Result.get_ok;
 
 let handler = (request: Morph.Request.t(string)) => {
@@ -54,47 +45,50 @@ let handler = (request: Morph.Request.t(string)) => {
   };
 
   switch (request.meth, path_parts) {
+  | (`GET, ["livereload"]) =>
+    open Morph;
+    let e = "event: message\nid: 0\ndata: change received\n\n\n";
+
+    Response.empty
+    |> Response.add_header(("Connection", "keep-alive"))
+    |> Response.add_header(("Content-Type", "text/event-stream"))
+    |> Response.add_header(("Cache-Control", "no-cache"))
+    // |> Response.add_header(("Transfer-Encoding", "chunked"))
+    |> Response.add_header(("Access-Control-Allow-Origin", "*"))
+    |> Response.set_status(`OK)
+    |> Morph_base.Response.string_stream(
+         ~stream=stream |> Lwt_stream.map(_ => e),
+       );
   | (`GET, file_path) =>
     let filePath = file_path |> String.concat("/");
-    let file = Unix.stat(filePath);
 
-    let sizeFile = file.st_size;
+    switch (Luv.File.Sync.stat(filePath)) {
+    | Error(_) => Response.not_found(Response.empty)
+    | Ok(fileStat) =>
+      let sizeFile = Unsigned.UInt64.to_int(fileStat.size);
 
-    let st = get_file_stream(filePath);
-    let rl = Lwt_stream.of_string(reloadScript);
+      let st = get_file_stream(filePath);
+      let rl = Lwt_stream.of_string(reloadScript);
 
-    let comb = Lwt_stream.append(st, rl);
-    let size = sizeFile + String.length(reloadScript);
+      let comb = Lwt_stream.append(st, rl);
+      let size = sizeFile + String.length(reloadScript);
 
-    Morph.Response.add_header(
-      ("Content-type", Magic_mime.lookup(filePath)),
-      Morph.Response.empty,
-    )
-    |> Response.add_header(("Transfer-Encoding", "chunked"))
-    |> Morph.Response.add_header(("Content-length", string_of_int(size)))
-    |> Morph_base.Response.byte_stream(~stream=comb);
+      Morph.Response.add_header(
+        ("Content-type", Magic_mime.lookup(filePath)),
+        Morph.Response.empty,
+      )
+      |> Response.add_header(("Transfer-Encoding", "chunked"))
+      |> Morph.Response.add_header(("Content-length", string_of_int(size)))
+      |> Morph_base.Response.byte_stream(~stream=comb);
+    };
 
   | (_, _) => Response.not_found(Response.empty)
   };
 };
 
-let http_server = Morph_server_http.make(~port=4000, ());
-
-let reload_server = Morph_server_http.make(~port=5005, ());
-
 let reloadServerHandler = (request: Morph.Request.t(string)) => {
   open Morph;
-  // let stream =
-  //   Lwt_process.pread_lines(("esy", [|"esy", "fswatch", "index.html"|]));
-  // let stream =
-  //   Lwt_process.pread_lines((
-  //     "esy",
-  //     [|"esy", "fswatch", "-l 0.1", "-e '.*/\..*'", "."|],
-  //   ));
-  // print_endline("new handler");
   let e = "event: message\nid: 0\ndata: change received\n\n\n";
-  // let (st, push) = Lwt_stream.create();
-  // let _ = push(Some("event: message\nid: 0\ndata: awaiting changes\n\n\n"));
 
   Response.empty
   |> Response.add_header(("Connection", "keep-alive"))
@@ -109,18 +103,11 @@ let reloadServerHandler = (request: Morph.Request.t(string)) => {
 };
 
 let main = () => {
-  Lwt.join([
-    Morph.start(
-      ~servers=[http_server],
-      ~middlewares=[Library.Middleware.logger],
-      handler,
-    ),
-    Morph.start(
-      ~servers=[reload_server],
-      ~middlewares=[Library.Middleware.logger],
-      reloadServerHandler,
-    ),
-  ]);
+  Morph.start(
+    ~servers=[Morph_server_http.make(~port=4000, ())],
+    ~middlewares=[Library.Middleware.logger],
+    handler,
+  );
 };
 
 ignore(Luv.Thread.join(threadFs));
