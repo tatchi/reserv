@@ -27,6 +27,9 @@ let fswatch =
 
 let threadFs = Luv.Thread.create(_ => fswatch) |> Result.get_ok;
 
+let isBaseRoute = (request: Morph.Request.t(string)) =>
+  Uri.of_string(request.target) |> Uri.path == "/index.html";
+
 let handler = (request: Morph.Request.t(string)) => {
   open Morph;
 
@@ -47,31 +50,38 @@ let handler = (request: Morph.Request.t(string)) => {
   switch (request.meth, path_parts) {
   | (`GET, ["livereload"]) =>
     open Morph;
-    let e = "event: message\nid: 0\ndata: change received\n\n\n";
+    let e = "event: connected\nid: 0\ndata: ready\n";
 
     Response.empty
     |> Response.add_header(("Connection", "keep-alive"))
     |> Response.add_header(("Content-Type", "text/event-stream"))
     |> Response.add_header(("Cache-Control", "no-cache"))
-    // |> Response.add_header(("Transfer-Encoding", "chunked"))
+    |> Response.add_header(("Transfer-Encoding", "chunked"))
     |> Response.add_header(("Access-Control-Allow-Origin", "*"))
     |> Response.set_status(`OK)
     |> Morph_base.Response.string_stream(
          ~stream=stream |> Lwt_stream.map(_ => e),
        );
   | (`GET, file_path) =>
-    let filePath = file_path |> String.concat("/");
+    let filePath = ["build", ...file_path] |> String.concat("/");
 
     switch (Luv.File.Sync.stat(filePath)) {
     | Error(_) => Response.not_found(Response.empty)
     | Ok(fileStat) =>
       let sizeFile = Unsigned.UInt64.to_int(fileStat.size);
+      let streamFile = get_file_stream(filePath);
 
-      let st = get_file_stream(filePath);
-      let rl = Lwt_stream.of_string(reloadScript);
+      let (stream, size) =
+        switch (isBaseRoute(request)) {
+        | false => (streamFile, sizeFile)
+        | true =>
+          let reloadScriptStream = Lwt_stream.of_string(reloadScript);
+          let combinedStream =
+            Lwt_stream.append(streamFile, reloadScriptStream);
+          let combinedSize = sizeFile + String.length(reloadScript);
 
-      let comb = Lwt_stream.append(st, rl);
-      let size = sizeFile + String.length(reloadScript);
+          (combinedStream, combinedSize);
+        };
 
       Morph.Response.add_header(
         ("Content-type", Magic_mime.lookup(filePath)),
@@ -79,7 +89,7 @@ let handler = (request: Morph.Request.t(string)) => {
       )
       |> Response.add_header(("Transfer-Encoding", "chunked"))
       |> Morph.Response.add_header(("Content-length", string_of_int(size)))
-      |> Morph_base.Response.byte_stream(~stream=comb);
+      |> Morph_base.Response.byte_stream(~stream);
     };
 
   | (_, _) => Response.not_found(Response.empty)

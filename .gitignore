@@ -7,3 +7,5 @@ _release
 *.native
 *.install
 **/.merlin
+
+build
