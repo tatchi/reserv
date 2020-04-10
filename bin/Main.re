@@ -1,42 +1,43 @@
 let test = {
   Console.log("Hello, world!");
 
-  switch (Luv.File.Sync.opendir("tatchi")) {
-  | Error(_) => Console.log("error while opening dir")
-  | Ok(dir) =>
-    switch (Luv.File.Sync.readdir(dir)) {
-    | Error(_) => Console.log("error while reading dir")
-    | Ok(dirents) =>
-      Array.iter(
-        dirent => {
-          let watcher = Luv.FS_poll.init() |> Result.get_ok;
-          let w =
-            Luv.FS_poll.start(
-              ~interval=10,
-              watcher,
-              "tatchi/" ++ Luv.File.Dirent.(dirent.name),
-              result => {
-              switch (result) {
-              | Error(e) => Console.log(Luv.Error.err_name(e))
-              | Ok((fileStat1, fileStat2)) => Console.log("change")
-              }
-            });
-          let threadFs = Luv.Thread.create(_ => w) |> Result.get_ok;
-          ignore(Luv.Thread.join(threadFs));
-        },
-        dirents,
-      )
-    }
+  let getFiles = (dir: string) => {
+    let rec helper = (dirString: string) => {
+      switch (Luv.File.Sync.opendir(dirString)) {
+      | Error(_) =>
+        Console.log("error while opening dir");
+        [||];
+      | Ok(dir) =>
+        switch (Luv.File.Sync.readdir(dir)) {
+        | Error(_) =>
+          Console.log("error while reading dir");
+          [||];
+        | Ok(dirents) =>
+          Array.fold_left(
+            (acc, dirent) =>
+              switch (Luv.File.Dirent.(dirent.kind)) {
+              | `FILE =>
+                Array.append(
+                  [|dirString ++ "/" ++ Luv.File.Dirent.(dirent.name)|],
+                  acc,
+                )
+              | `DIR =>
+                Array.append(
+                  helper(dirString ++ "/" ++ Luv.File.Dirent.(dirent.name)),
+                  acc,
+                )
+              | _ => acc
+              },
+            [||],
+            dirents,
+          )
+        }
+      };
+    };
+
+    helper(dir);
   };
-  // Luv.FS_poll.start(
-  //   ~interval=10,
-  //   watcher,
-  //   "index.html",
-  //   fun
-  //   | Error(e) => {
-  //       Console.log("error");
-  //     }
-  //   | Ok((fileStat1, fileStat2)) => Console.log("change"),
-  // );
+  getFiles("build") |> Array.iter(Console.log);
 };
-ignore(Luv.Loop.run(test));
+
+ignore(Luv.Loop.run());

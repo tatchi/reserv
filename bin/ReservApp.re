@@ -19,37 +19,59 @@ let reloadScript = "
 
 let (stream, push) = Lwt_stream.create();
 
-let fswatch =
-  switch (Luv.File.Sync.opendir("build")) {
-  | Error(_) => Console.log("error while opening dir")
-  | Ok(dir) =>
-    switch (Luv.File.Sync.readdir(dir)) {
-    | Error(_) => Console.log("error while reading dir")
-    | Ok(dirents) =>
-      Array.iter(
-        dirent => {
-          Console.log(Luv.File.Dirent.(dirent.name));
-          let watcher = Luv.FS_poll.init() |> Result.get_ok;
-          let watch =
-            Luv.FS_poll.start(
-              ~interval=10,
-              watcher,
-              "build/" ++ Luv.File.Dirent.(dirent.name),
-              result => {
-              switch (result) {
-              | Error(e) => Console.log(e)
-              | Ok((fileStat1, fileStat2)) =>
-                Console.log("change");
-                push(Some("event: message\nid: 0\ndata: reload\n \n\n"));
-              }
-            });
-          let threadFs = Luv.Thread.create(_ => watch) |> Result.get_ok;
-          ignore(Luv.Thread.join(threadFs));
-        },
-        dirents,
-      )
-    }
+let getFiles = (dir: string) => {
+  let rec helper = (dirString: string) => {
+    switch (Luv.File.Sync.opendir(dirString)) {
+    | Error(_) =>
+      Console.log("error while opening dir");
+      [||];
+    | Ok(dir) =>
+      switch (Luv.File.Sync.readdir(dir)) {
+      | Error(_) =>
+        Console.log("error while reading dir");
+        [||];
+      | Ok(dirents) =>
+        Array.fold_left(
+          (acc, dirent) =>
+            switch (Luv.File.Dirent.(dirent.kind)) {
+            | `FILE =>
+              Array.append(
+                [|dirString ++ "/" ++ Luv.File.Dirent.(dirent.name)|],
+                acc,
+              )
+            | `DIR =>
+              Array.append(
+                helper(dirString ++ "/" ++ Luv.File.Dirent.(dirent.name)),
+                acc,
+              )
+            | _ => acc
+            },
+          [||],
+          dirents,
+        )
+      }
+    };
   };
+
+  helper(dir);
+};
+
+getFiles("build")
+|> Array.iter(filename => {
+     Console.log(filename);
+     let watcher = Luv.FS_poll.init() |> Result.get_ok;
+     let watch =
+       Luv.FS_poll.start(~interval=10, watcher, filename, result => {
+         switch (result) {
+         | Error(e) => Console.log(e)
+         | Ok((fileStat1, fileStat2)) =>
+           Console.log("change");
+           push(Some("event: message\nid: 0\ndata: reload\n \n\n"));
+         }
+       });
+     let threadFs = Luv.Thread.create(_ => watch) |> Result.get_ok;
+     ignore(Luv.Thread.join(threadFs));
+   });
 
 // let fswatch =
 //   Luv.FS_poll.start(~interval=10, watcher, "build", result => {
