@@ -86,7 +86,8 @@ let handler = (request: Morph.Request.t(string)) => {
   switch (request.meth, path_parts) {
   | (`GET, ["livereload"]) =>
     open Morph;
-    let e = "event: connected\nid: 0\ndata: ready\n";
+    // let e = "event: connected\nid: 0\ndata: ready\n";
+    let e = "event: message\nid: 0\ndata: change received\n\n\n";
 
     Response.empty
     |> Response.add_header(("Connection", "keep-alive"))
