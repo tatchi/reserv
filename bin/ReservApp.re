@@ -40,7 +40,7 @@ let fswatch =
               | Error(e) => Console.log(e)
               | Ok((fileStat1, fileStat2)) =>
                 Console.log("change");
-                push(Some("changes appened"));
+                push(Some("event: message\nid: 0\ndata: reload\n \n\n"));
               }
             });
           let threadFs = Luv.Thread.create(_ => watch) |> Result.get_ok;
@@ -86,9 +86,9 @@ let handler = (request: Morph.Request.t(string)) => {
   switch (request.meth, path_parts) {
   | (`GET, ["livereload"]) =>
     open Morph;
-    // let e = "event: connected\nid: 0\ndata: ready\n";
-    let e = "event: message\nid: 0\ndata: change received\n\n\n";
-
+    let e = "event: connected\nid: 0\ndata: ready\n \n\n";
+    // let e = "event: message\nid: 0\ndata: change received\n\n\n";
+    push(Some(e));
     Response.empty
     |> Response.add_header(("Connection", "keep-alive"))
     |> Response.add_header(("Content-Type", "text/event-stream"))
@@ -96,14 +96,7 @@ let handler = (request: Morph.Request.t(string)) => {
     |> Response.add_header(("Transfer-Encoding", "chunked"))
     |> Response.add_header(("Access-Control-Allow-Origin", "*"))
     |> Response.set_status(`OK)
-    |> Morph_base.Response.string_stream(
-         ~stream=
-           stream
-           |> Lwt_stream.map(_ => {
-                Console.log("received changes");
-                e;
-              }),
-       );
+    |> Morph_base.Response.string_stream(~stream);
   | (`GET, file_path) =>
     let filePath = ["build", ...file_path] |> String.concat("/");
 
