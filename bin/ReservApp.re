@@ -5,27 +5,63 @@ Logs.set_reporter(Logs_fmt.reporter());
 let reloadScript = "
 <script>
     const source = new EventSource('/livereload');
-    const reload = ()=>location.reload(true);
+    const reload = ()=> {
+      console.log('received')
+      location.reload(true)
+      };
     source.onmessage = reload;
-    source.onerror = ()=>(source.onopen = reload);
+    source.onerror = () =>{
+      console.log('error')
+      source.onopen = reload
+      };
     console.log('[reserv] listening for file changes');
 </script>";
 
 let (stream, push) = Lwt_stream.create();
 
-let watcher = Luv.FS_poll.init() |> Result.get_ok;
-
 let fswatch =
-  Luv.FS_poll.start(~interval=10, watcher, "index.html", result => {
-    switch (result) {
-    | Error(_) => Console.log("error")
-    | Ok((fileStat1, fileStat2)) =>
-      Console.log("change");
-      push(Some("changes appened"));
+  switch (Luv.File.Sync.opendir("build")) {
+  | Error(_) => Console.log("error while opening dir")
+  | Ok(dir) =>
+    switch (Luv.File.Sync.readdir(dir)) {
+    | Error(_) => Console.log("error while reading dir")
+    | Ok(dirents) =>
+      Array.iter(
+        dirent => {
+          Console.log(Luv.File.Dirent.(dirent.name));
+          let watcher = Luv.FS_poll.init() |> Result.get_ok;
+          let watch =
+            Luv.FS_poll.start(
+              ~interval=10,
+              watcher,
+              "build/" ++ Luv.File.Dirent.(dirent.name),
+              result => {
+              switch (result) {
+              | Error(e) => Console.log(e)
+              | Ok((fileStat1, fileStat2)) =>
+                Console.log("change");
+                push(Some("changes appened"));
+              }
+            });
+          let threadFs = Luv.Thread.create(_ => watch) |> Result.get_ok;
+          ignore(Luv.Thread.join(threadFs));
+        },
+        dirents,
+      )
     }
-  });
+  };
 
-let threadFs = Luv.Thread.create(_ => fswatch) |> Result.get_ok;
+// let fswatch =
+//   Luv.FS_poll.start(~interval=10, watcher, "build", result => {
+//     switch (result) {
+//     | Error(_) => Console.log("error")
+//     | Ok((fileStat1, fileStat2)) =>
+//       Console.log("change");
+//       push(Some("changes appened"));
+//     }
+//   });
+
+// let threadFs = Luv.Thread.create(_ => fswatch) |> Result.get_ok;
 
 let isBaseRoute = (request: Morph.Request.t(string)) =>
   Uri.of_string(request.target) |> Uri.path == "/index.html";
@@ -60,7 +96,12 @@ let handler = (request: Morph.Request.t(string)) => {
     |> Response.add_header(("Access-Control-Allow-Origin", "*"))
     |> Response.set_status(`OK)
     |> Morph_base.Response.string_stream(
-         ~stream=stream |> Lwt_stream.map(_ => e),
+         ~stream=
+           stream
+           |> Lwt_stream.map(_ => {
+                Console.log("received changes");
+                e;
+              }),
        );
   | (`GET, file_path) =>
     let filePath = ["build", ...file_path] |> String.concat("/");
@@ -96,21 +137,21 @@ let handler = (request: Morph.Request.t(string)) => {
   };
 };
 
-let reloadServerHandler = (request: Morph.Request.t(string)) => {
-  open Morph;
-  let e = "event: message\nid: 0\ndata: change received\n\n\n";
+// let reloadServerHandler = (request: Morph.Request.t(string)) => {
+//   open Morph;
+//   let e = "event: message\nid: 0\ndata: change received\n\n\n";
 
-  Response.empty
-  |> Response.add_header(("Connection", "keep-alive"))
-  |> Response.add_header(("Content-Type", "text/event-stream"))
-  |> Response.add_header(("Cache-Control", "no-cache"))
-  // |> Response.add_header(("Transfer-Encoding", "chunked"))
-  |> Response.add_header(("Access-Control-Allow-Origin", "*"))
-  |> Response.set_status(`OK)
-  |> Morph_base.Response.string_stream(
-       ~stream=stream |> Lwt_stream.map(_ => e),
-     );
-};
+//   Response.empty
+//   |> Response.add_header(("Connection", "keep-alive"))
+//   |> Response.add_header(("Content-Type", "text/event-stream"))
+//   |> Response.add_header(("Cache-Control", "no-cache"))
+//   // |> Response.add_header(("Transfer-Encoding", "chunked"))
+//   |> Response.add_header(("Access-Control-Allow-Origin", "*"))
+//   |> Response.set_status(`OK)
+//   |> Morph_base.Response.string_stream(
+//        ~stream=stream |> Lwt_stream.map(_ => e),
+//      );
+// };
 
 let main = () => {
   Morph.start(
@@ -120,7 +161,7 @@ let main = () => {
   );
 };
 
-ignore(Luv.Thread.join(threadFs));
+// ignore(Luv.Thread.join(threadFs));
 
 Luv.Thread.create(_ => Lwt_main.run(main())) |> Result.get_ok;
 
