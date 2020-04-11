@@ -17,60 +17,15 @@ let reloadScript = "
 
 let (stream, push) = Lwt_stream.create();
 
-let getFiles = (dir: string) => {
-  Console.log(dir);
-  let rec helper = (dirString: string) => {
-    switch (Luv.File.Sync.opendir(dirString)) {
-    | Error(e) =>
-      Console.log("error while opening dir: " ++ Luv.Error.err_name(e));
-      [||];
-    | Ok(dir) =>
-      switch (Luv.File.Sync.readdir(dir)) {
-      | Error(_) =>
-        Console.log("error while reading dir");
-        [||];
-      | Ok(dirents) =>
-        Array.fold_left(
-          (acc, dirent) =>
-            switch (Luv.File.Dirent.(dirent.kind)) {
-            | `FILE =>
-              Array.append(
-                [|dirString ++ "/" ++ Luv.File.Dirent.(dirent.name)|],
-                acc,
-              )
-            | `DIR =>
-              Array.append(
-                helper(dirString ++ "/" ++ Luv.File.Dirent.(dirent.name)),
-                acc,
-              )
-            | _ => acc
-            },
-          [||],
-          dirents,
-        )
-      }
-    };
-  };
-
-  helper(dir);
-};
-
-let isBaseRoute = (request: Morph.Request.t(string)) =>
-  Uri.of_string(request.target) |> Uri.path == "/index.html";
-
-let run = (port, dir) => {
+let run = (port, dir, rootFile) => {
   Fmt_tty.setup_std_outputs();
   Logs.set_level(Some(Logs.Info));
   Logs.set_reporter(Logs_fmt.reporter());
 
-  Console.log(
-    switch (Luv.Path.cwd()) {
-    | Error(_) => Console.log("error")
-    | Ok(c) => Console.log(c)
-    },
-  );
+  let isBaseRoute = (request: Morph.Request.t(string)) =>
+    Uri.of_string(request.target) |> Uri.path == "/" ++ rootFile;
 
-  getFiles(dir)
+  Library.File.getFilenamesFromDirName(dir)
   |> Array.iter(filename => {
        let watcher = Luv.FS_poll.init() |> Result.get_ok;
        let watch =
@@ -118,12 +73,12 @@ let run = (port, dir) => {
     | (`GET, file_path) =>
       let file_path =
         switch (file_path) {
-        | [] => ["index.html"]
+        | [] => [rootFile]
         | _ => file_path
         };
 
       let filePath = [dir, ...file_path] |> String.concat("/");
-        Console.log(filePath)
+      Console.log(filePath);
 
       switch (Luv.File.Sync.stat(filePath)) {
       | Error(_) => Response.not_found(Response.empty)
@@ -178,6 +133,20 @@ let port = {
   Arg.(value & opt(int, 8000) & info(["p", "port"], ~docv="PORT", ~doc));
 };
 
+let directory = {
+  let doc = "Directory to serve";
+  Arg.(value & pos(0, dir, ".") & info([], ~docv="DIRECTORY", ~doc));
+};
+
+let rootFile = {
+  let doc = "Default file if no path";
+  Arg.(
+    value
+    & opt(string, "index.html")
+    & info(["r", "rootFile"], ~docv="ROOT_FILE", ~doc)
+  );
+};
+
 let info = {
   let doc = "static files server";
   let man = [
@@ -196,11 +165,6 @@ let info = {
   );
 };
 
-let directory = {
-  let doc = "Directory to serve";
-  Arg.(value & pos(0, dir, ".") & info([], ~docv="DIRECTORY", ~doc));
-};
-
-let reserv_t = Term.(const(run) $ port $ directory);
+let reserv_t = Term.(const(run) $ port $ directory $ rootFile);
 
 let () = Term.eval((reserv_t, info)) |> Term.exit;

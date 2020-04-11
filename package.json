@@ -25,7 +25,7 @@
         "Console = require('console/lib')", "Pastel = require('pastel/lib')",
         "Morph = require('morph')", "Mtime = require('mtime')",
         "Mtime_clock = require('mtime/clock/os')", "Logs = require('logs')",
-        "Lwt = require('lwt')"
+        "Lwt = require('lwt')", "Luv = require('luv')"
       ]
     },
     "bin": {
