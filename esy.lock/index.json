@@ -1,17 +1,17 @@
 {
-  "checksum": "3ac27e0062811bbd336058904a798666",
+  "checksum": "6e8d9e3a8cd29c6125985c941e91751f",
   "root": "reserv@link-dev:./package.json",
   "node": {
-    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9": {
+    "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9": {
       "id":
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
       "name": "yarn-pkg-config",
       "version":
-        "github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0",
+        "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79",
       "source": {
         "type": "install",
         "source": [
-          "github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0"
+          "github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79"
         ]
       },
       "overrides": [],
@@ -29,9 +29,7 @@
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9",
-        "fswatch@archive:https://github.com/emcrisostomo/fswatch/releases/download/1.13.0/fswatch-1.13.0.tar.gz#sha1:c533fb6d9206814e12541282a76570412f65dc10@f1ebeee9",
-        "@reason-native/rely@3.2.1@d41d8cd9",
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native/rely@3.2.1@d41d8cd9",
         "@reason-native/pastel@0.3.0@d41d8cd9",
         "@reason-native/console@0.1.0@d41d8cd9",
         "@reason-native-web/morph_server_http@0.3.4@d41d8cd9",
@@ -97,24 +95,6 @@
       "dependencies": [],
       "devDependencies": []
     },
-    "fswatch@archive:https://github.com/emcrisostomo/fswatch/releases/download/1.13.0/fswatch-1.13.0.tar.gz#sha1:c533fb6d9206814e12541282a76570412f65dc10@f1ebeee9": {
-      "id":
-        "fswatch@archive:https://github.com/emcrisostomo/fswatch/releases/download/1.13.0/fswatch-1.13.0.tar.gz#sha1:c533fb6d9206814e12541282a76570412f65dc10@f1ebeee9",
-      "name": "fswatch",
-      "version":
-        "archive:https://github.com/emcrisostomo/fswatch/releases/download/1.13.0/fswatch-1.13.0.tar.gz#sha1:c533fb6d9206814e12541282a76570412f65dc10",
-      "source": {
-        "type": "install",
-        "source": [
-          "archive:https://github.com/emcrisostomo/fswatch/releases/download/1.13.0/fswatch-1.13.0.tar.gz#sha1:c533fb6d9206814e12541282a76570412f65dc10"
-        ]
-      },
-      "overrides": [
-        "esy.lock/overrides/f1ebeee9acc6d5c82f7b7c4ee3e1f762/esy.json"
-      ],
-      "dependencies": [],
-      "devDependencies": []
-    },
     "esy-openssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@4108b898": {
       "id":
         "esy-openssl@archive:https://github.com/openssl/openssl/archive/OpenSSL_1_1_1d.tar.gz#sha1:df0ee4811c87c209ebadb4e6b203d1e560d00f9a@4108b898",
@@ -131,7 +111,7 @@
         "esy.lock/overrides/4108b898e4249d2037785df23c0d9d38/package.json"
       ],
       "dependencies": [
-        "@opam/conf-pkg-config@opam:1.1@5d0d3ed7",
+        "@opam/conf-pkg-config@opam:1.1@55d8e330",
         "@opam/conf-autoconf@github:esy-packages/esy-autoconf:package.json#fb93edf@d41d8cd9"
       ],
       "devDependencies": []
@@ -923,38 +903,31 @@
         "@opam/astring@opam:0.8.3@4e5e17d5"
       ]
     },
-    "@opam/ocplib-endian@opam:1.0@aa720242": {
-      "id": "@opam/ocplib-endian@opam:1.0@aa720242",
+    "@opam/ocplib-endian@opam:1.1@84c1ca88": {
+      "id": "@opam/ocplib-endian@opam:1.1@84c1ca88",
       "name": "@opam/ocplib-endian",
-      "version": "opam:1.0",
+      "version": "opam:1.1",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/74/74b45ba33e189283170a748c2a3ed477#md5:74b45ba33e189283170a748c2a3ed477",
-          "archive:https://github.com/OCamlPro/ocplib-endian/archive/1.0.tar.gz#md5:74b45ba33e189283170a748c2a3ed477"
+          "archive:https://opam.ocaml.org/cache/md5/de/dedf4d69c1b87b3c6c7234f632399285#md5:dedf4d69c1b87b3c6c7234f632399285",
+          "archive:https://github.com/OCamlPro/ocplib-endian/archive/1.1.tar.gz#md5:dedf4d69c1b87b3c6c7234f632399285"
         ],
         "opam": {
           "name": "ocplib-endian",
-          "version": "1.0",
-          "path": "esy.lock/opam/ocplib-endian.1.0"
+          "version": "1.1",
+          "path": "esy.lock/opam/ocplib-endian.1.1"
         }
       },
-      "overrides": [
-        {
-          "opamoverride":
-            "esy.lock/overrides/opam__s__ocplib_endian_opam__c__1.0_opam_override"
-        }
-      ],
+      "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@opam/ocamlbuild@opam:0.14.0@6ac75d03",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.4.0@639d28a3",
         "@opam/cppo@opam:1.6.6@f4f83858",
         "@opam/base-bytes@opam:base@19d0c2ff",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
-        "@opam/cppo@opam:1.6.6@f4f83858",
+        "ocaml@4.8.1000@d41d8cd9", "@opam/dune@opam:2.4.0@639d28a3",
         "@opam/base-bytes@opam:base@19d0c2ff"
       ]
     },
@@ -1302,7 +1275,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
         "@opam/result@opam:1.5@6b753c82",
-        "@opam/ocplib-endian@opam:1.0@aa720242",
+        "@opam/ocplib-endian@opam:1.1@84c1ca88",
         "@opam/mmap@opam:1.1.0@b85334ff",
         "@opam/dune-configurator@opam:2.4.0@6976bb12",
         "@opam/dune@opam:2.4.0@639d28a3", "@opam/cppo@opam:1.6.6@f4f83858",
@@ -1313,7 +1286,7 @@
       "devDependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/seq@opam:base@d8d7de1d",
         "@opam/result@opam:1.5@6b753c82",
-        "@opam/ocplib-endian@opam:1.0@aa720242",
+        "@opam/ocplib-endian@opam:1.1@84c1ca88",
         "@opam/mmap@opam:1.1.0@b85334ff",
         "@opam/dune-configurator@opam:2.4.0@6976bb12",
         "@opam/dune@opam:2.4.0@639d28a3"
@@ -1776,7 +1749,7 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9", "@opam/ocamlfind@opam:1.8.1@ff07b0f9",
         "@opam/integers@opam:0.3.0@d6eefd3a",
-        "@opam/conf-pkg-config@opam:1.1@5d0d3ed7",
+        "@opam/conf-pkg-config@opam:1.1@55d8e330",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": [
@@ -1810,8 +1783,8 @@
         "@opam/base-unix@opam:base@87d0b2eb"
       ]
     },
-    "@opam/conf-pkg-config@opam:1.1@5d0d3ed7": {
-      "id": "@opam/conf-pkg-config@opam:1.1@5d0d3ed7",
+    "@opam/conf-pkg-config@opam:1.1@55d8e330": {
+      "id": "@opam/conf-pkg-config@opam:1.1@55d8e330",
       "name": "@opam/conf-pkg-config",
       "version": "opam:1.1",
       "source": {
@@ -1830,7 +1803,7 @@
         }
       ],
       "dependencies": [
-        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#cca65f99674ed2d954d28788edeb8c57fada5ed0@d41d8cd9",
+        "yarn-pkg-config@github:esy-ocaml/yarn-pkg-config#db3a0b63883606dd57c54a7158d560d6cba8cd79@d41d8cd9",
         "@esy-ocaml/substs@0.0.1@d41d8cd9"
       ],
       "devDependencies": []
