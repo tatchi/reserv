@@ -54,23 +54,6 @@ let getFiles = (dir: string) => {
   helper(dir);
 };
 
-getFiles("build")
-|> Array.iter(filename => {
-     Console.log(filename);
-     let watcher = Luv.FS_poll.init() |> Result.get_ok;
-     let watch =
-       Luv.FS_poll.start(~interval=10, watcher, filename, result => {
-         switch (result) {
-         | Error(e) => Console.log(e)
-         | Ok((fileStat1, fileStat2)) =>
-           Console.log("change");
-           push(Some("event: message\nid: 0\ndata: reload\n \n\n"));
-         }
-       });
-     let threadFs = Luv.Thread.create(_ => watch) |> Result.get_ok;
-     ignore(Luv.Thread.join(threadFs));
-   });
-
 let isBaseRoute = (request: Morph.Request.t(string)) =>
   Uri.of_string(request.target) |> Uri.path == "/index.html";
 
@@ -141,6 +124,26 @@ let run = port => {
   Fmt_tty.setup_std_outputs();
   Logs.set_level(Some(Logs.Info));
   Logs.set_reporter(Logs_fmt.reporter());
+
+  Console.log("in");
+
+  getFiles("build")
+  |> Array.iter(filename => {
+       Console.log(filename);
+       let watcher = Luv.FS_poll.init() |> Result.get_ok;
+       let watch =
+         Luv.FS_poll.start(~interval=10, watcher, filename, result => {
+           switch (result) {
+           | Error(e) => Console.log(e)
+           | Ok((fileStat1, fileStat2)) =>
+             Console.log("change");
+             push(Some("event: message\nid: 0\ndata: reload\n \n\n"));
+           }
+         });
+       let threadFs = Luv.Thread.create(_ => watch) |> Result.get_ok;
+       ignore(Luv.Thread.join(threadFs));
+     });
+
   let startServer = () =>
     Morph.start(
       ~servers=[Morph_server_http.make(~port, ())],
@@ -176,10 +179,6 @@ let info = {
   );
 };
 
-let run2 = port => {
-  Console.log(string_of_int(port));
-};
-
-let reserv_t = Term.(const(run2) $ port);
+let reserv_t = Term.(const(run) $ port);
 
 let () = Term.eval((reserv_t, info)) |> Term.exit;
