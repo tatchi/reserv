@@ -1,3 +1,5 @@
+open Cmdliner;
+
 let reloadScript = "
 <script>
     const source = new EventSource('/livereload');
@@ -135,13 +137,13 @@ let handler = (request: Morph.Request.t(string)) => {
   };
 };
 
-let run = () => {
+let run = port => {
   Fmt_tty.setup_std_outputs();
   Logs.set_level(Some(Logs.Info));
   Logs.set_reporter(Logs_fmt.reporter());
   let startServer = () =>
     Morph.start(
-      ~servers=[Morph_server_http.make(~port=4000, ())],
+      ~servers=[Morph_server_http.make(~port, ())],
       ~middlewares=[Library.Middleware.logger],
       handler,
     );
@@ -151,4 +153,33 @@ let run = () => {
   Luv.Loop.run();
 };
 
-run();
+let port = {
+  let doc = "Port the server will be running on.";
+  Arg.(value & opt(int, 8000) & info(["p", "port"], ~docv="PORT", ~doc));
+};
+
+let info = {
+  let doc = "static files server";
+  let man = [
+    `S(Manpage.s_bugs),
+    `P("File bug reports at https://github.com/tatchi/reserv"),
+    `S(Manpage.s_common_options),
+  ];
+  let sdocs = Manpage.s_common_options;
+  Term.info(
+    "reserv",
+    ~version="0.0.1",
+    ~doc,
+    ~sdocs,
+    ~exits=Term.default_exits,
+    ~man,
+  );
+};
+
+let run2 = port => {
+  Console.log(string_of_int(port));
+};
+
+let reserv_t = Term.(const(run2) $ port);
+
+let () = Term.eval((reserv_t, info)) |> Term.exit;
