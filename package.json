@@ -1,44 +1,85 @@
 {
   "name": "reserv",
   "version": "0.1.0",
-  "description": "Starter Reason Esy Pesy Project",
+  "description": "Static files server",
+  "author": "Corentin Leruth <corentin.leruth@gmail.com>",
+  "keywords": [
+    "static file",
+    "server",
+    "reason",
+    "native"
+  ],
+  "bugs": {
+    "url": "https://github.com/tatchi/reserv/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tatchi/reserv.git"
+  },
+  "license": "MIT",
   "esy": {
     "build": "dune build -p #{self.name}",
     "buildDev": "pesy build",
     "NOTE": "Optional release Section. Customizes result of `esy release`",
-    "release": { "releasedBinaries": [ "ReservApp.exe" ] },
-    "buildEnv": { "ODOC_SYNTAX": "re" }
+    "release": {
+      "releasedBinaries": [
+        "ReservApp.exe"
+      ]
+    },
+    "buildEnv": {
+      "ODOC_SYNTAX": "re"
+    }
   },
   "buildDirs": {
     "test": {
       "imports": [
-        "Library = require('reserv/library')", "Rely = require('rely/lib')"
+        "Library = require('reserv/library')",
+        "Rely = require('rely/lib')"
       ],
-      "flags": [ "-linkall", "-g", "-w", "-9" ]
+      "flags": [
+        "-linkall",
+        "-g",
+        "-w",
+        "-9"
+      ]
     },
     "testExe": {
-      "imports": [ "Test = require('reserv/test')" ],
-      "bin": { "RunReservTests.exe": "RunReservTests.re" }
+      "imports": [
+        "Test = require('reserv/test')"
+      ],
+      "bin": {
+        "RunReservTests.exe": "RunReservTests.re"
+      }
     },
     "library": {
       "imports": [
-        "Console = require('console/lib')", "Pastel = require('pastel/lib')",
-        "Morph = require('morph')", "Mtime = require('mtime')",
-        "Mtime_clock = require('mtime/clock/os')", "Logs = require('logs')",
-        "Lwt = require('lwt')", "Luv = require('luv')"
+        "Console = require('console/lib')",
+        "Pastel = require('pastel/lib')",
+        "Morph = require('morph')",
+        "Mtime = require('mtime')",
+        "Mtime_clock = require('mtime/clock/os')",
+        "Logs = require('logs')",
+        "Lwt = require('lwt')",
+        "Luv = require('luv')"
       ]
     },
     "bin": {
       "imports": [
-        "Library = require('reserv/library')", "Morph = require('morph')",
+        "Library = require('reserv/library')",
+        "Morph = require('morph')",
         "Morph_base = require('morph_base')",
         "Morph_server_http = require('morph_server_http')",
-        "Logs = require('logs')", "Logs_fmt = require('logs/fmt')",
-        "Fmt_tty = require('fmt/tty')", "Lwt = require('lwt')",
-        "Uri = require('uri')", "Luv = require('luv')",
+        "Logs = require('logs')",
+        "Logs_fmt = require('logs/fmt')",
+        "Fmt_tty = require('fmt/tty')",
+        "Lwt = require('lwt')",
+        "Uri = require('uri')",
+        "Luv = require('luv')",
         "Cmdliner = require('cmdliner')"
       ],
-      "bin": { "ReservApp.exe": "ReservApp.re" }
+      "bin": {
+        "ReservApp.exe": "ReservApp.re"
+      }
     }
   },
   "scripts": {
