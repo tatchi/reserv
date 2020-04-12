@@ -46,7 +46,7 @@ let run = (port, dir, rootFile) => {
            ignore(Luv.Thread.join(threadFs));
          }),
        ~error=e =>
-       Console.log(Luv.Error.err_name)
+       Console.error(Luv.Error.err_name)
      );
 
   let handler = (request: Morph.Request.t(string)) => {
