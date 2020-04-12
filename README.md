@@ -1,6 +1,6 @@
 # reserv
 
-A project which demonstrates a Reason workflow with [Esy][].
+A project which demonstrates a Reason workflow with [Esy][]. 
 
 [esy]: https://github.com/esy/esy
 
