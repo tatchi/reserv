@@ -157,7 +157,7 @@ let info = {
   let sdocs = Manpage.s_common_options;
   Term.info(
     "reserv",
-    ~version="0.0.1",
+    ~version="0.1.0",
     ~doc,
     ~sdocs,
     ~exits=Term.default_exits,
