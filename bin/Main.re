@@ -1,43 +1,27 @@
-let test = {
-  Console.log("Hello, world!");
+let getFilenamesFromDirName = (dirname: string) => {
+  let (>>=) = Result.bind;
 
-  let getFiles = (dir: string) => {
-    let rec helper = (dirString: string) => {
-      switch (Luv.File.Sync.opendir(dirString)) {
-      | Error(_) =>
-        Console.log("error while opening dir");
-        [||];
-      | Ok(dir) =>
-        switch (Luv.File.Sync.readdir(dir)) {
-        | Error(_) =>
-          Console.log("error while reading dir");
-          [||];
-        | Ok(dirents) =>
-          Array.fold_left(
-            (acc, dirent) =>
-              switch (Luv.File.Dirent.(dirent.kind)) {
-              | `FILE =>
-                Array.append(
-                  [|dirString ++ "/" ++ Luv.File.Dirent.(dirent.name)|],
-                  acc,
-                )
-              | `DIR =>
-                Array.append(
-                  helper(dirString ++ "/" ++ Luv.File.Dirent.(dirent.name)),
-                  acc,
-                )
-              | _ => acc
-              },
-            [||],
-            dirents,
-          )
-        }
-      };
-    };
-
-    helper(dir);
+  let rec helper = (dirname: string) => {
+    Luv.File.Sync.opendir(dirname)
+    >>= Luv.File.Sync.readdir
+    >>= Array.fold_left(
+          (acc, dirent) => {
+            let filePath =
+              Filename.concat(dirname, Luv.File.Dirent.(dirent.name));
+            switch (Luv.File.Dirent.(dirent.kind)) {
+            | `FILE => acc |> Result.map(Array.append([|filePath|]))
+            | `DIR =>
+              helper(filePath)
+              >>= (
+                files => {
+                  acc |> Result.map(Array.append(files));
+                }
+              )
+            | _ => acc
+            };
+          },
+          Ok([||]),
+        );
   };
-  getFiles("build") |> Array.iter(Console.log);
+  helper(dirname);
 };
-
-ignore(Luv.Loop.run());

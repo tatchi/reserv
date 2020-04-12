@@ -30,19 +30,24 @@ let run = (port, dir, rootFile) => {
     );
 
   Library.File.getFilenamesFromDirName(dir)
-  |> Array.iter(filename => {
-       let watcher = Luv.FS_poll.init() |> Result.get_ok;
-       let watch =
-         Luv.FS_poll.start(~interval=100, watcher, filename, result => {
-           switch (result) {
-           | Error(_) => ()
-           | Ok(_) =>
-             push(Some("event: message\nid: 0\ndata: reload\n \n\n"))
-           }
-         });
-       let threadFs = Luv.Thread.create(_ => watch) |> Result.get_ok;
-       ignore(Luv.Thread.join(threadFs));
-     });
+  |> Result.fold(
+       ~ok=
+         Array.iter(filename => {
+           let watcher = Luv.FS_poll.init() |> Result.get_ok;
+           let watch =
+             Luv.FS_poll.start(~interval=100, watcher, filename, result => {
+               switch (result) {
+               | Error(_) => ()
+               | Ok(_) =>
+                 push(Some("event: message\nid: 0\ndata: reload\n \n\n"))
+               }
+             });
+           let threadFs = Luv.Thread.create(_ => watch) |> Result.get_ok;
+           ignore(Luv.Thread.join(threadFs));
+         }),
+       ~error=e =>
+       Console.log(Luv.Error.err_name)
+     );
 
   let handler = (request: Morph.Request.t(string)) => {
     open Morph;
