@@ -112,6 +112,7 @@
     "@opam/odoc": "*"
   },
   "resolutions": {
+    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c",
     "@reason-native-web/ssl": "0.5.9003"
   }
 }
