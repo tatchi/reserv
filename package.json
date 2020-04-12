@@ -112,6 +112,6 @@
     "@opam/odoc": "*"
   },
   "resolutions": {
-    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#4f46bdb3cd708c1b4efdfca97339afab7de50e69"
+    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#c47e3a47dd7d33cc1436a1a38641c50808802784"
   }
 }
