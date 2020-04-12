@@ -4,15 +4,13 @@ let reloadScript = "
 <script>
     const source = new EventSource('/livereload');
     const reload = ()=> {
-      console.log('received')
       location.reload(true)
       };
     source.onmessage = reload;
     source.onerror = () =>{
-      console.log('error')
       source.onopen = reload
       };
-    console.log('[reserv] listening for file changes');
+    console.log('🕵️‍♀️[reserv] listening for file changes...');
 </script>";
 
 let (stream, push) = Lwt_stream.create();
@@ -23,18 +21,23 @@ let run = (port, dir, rootFile) => {
   Logs.set_reporter(Logs_fmt.reporter());
 
   let isBaseRoute = (request: Morph.Request.t(string)) =>
-    Uri.of_string(request.target) |> Uri.path == "/" ++ rootFile;
+    Uri.of_string(request.target)
+    |> (
+      uri => {
+        let path = Uri.path(uri);
+        path == "/" || path === "/" ++ rootFile;
+      }
+    );
 
   Library.File.getFilenamesFromDirName(dir)
   |> Array.iter(filename => {
        let watcher = Luv.FS_poll.init() |> Result.get_ok;
        let watch =
-         Luv.FS_poll.start(~interval=10, watcher, filename, result => {
+         Luv.FS_poll.start(~interval=100, watcher, filename, result => {
            switch (result) {
-           | Error(e) => Console.log("error")
-           | Ok((fileStat1, fileStat2)) =>
-             Console.log("change");
-             push(Some("event: message\nid: 0\ndata: reload\n \n\n"));
+           | Error(_) => ()
+           | Ok(_) =>
+             push(Some("event: message\nid: 0\ndata: reload\n \n\n"))
            }
          });
        let threadFs = Luv.Thread.create(_ => watch) |> Result.get_ok;
@@ -78,7 +81,6 @@ let run = (port, dir, rootFile) => {
         };
 
       let filePath = [dir, ...file_path] |> String.concat("/");
-      Console.log(filePath);
 
       switch (Luv.File.Sync.stat(filePath)) {
       | Error(_) => Response.not_found(Response.empty)
@@ -110,9 +112,7 @@ let run = (port, dir, rootFile) => {
         |> Morph_base.Response.byte_stream(~stream);
       };
 
-    | (_, _) =>
-      Console.log("other");
-      Response.not_found(Response.empty);
+    | (_, _) => Response.not_found(Response.empty)
     };
   };
 
