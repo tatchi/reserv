@@ -1,7 +1,7 @@
 {
   "name": "reserv",
   "version": "0.1.0",
-  "description": "Static files server",
+  "description": "Static file server",
   "author": "Corentin Leruth <corentin.leruth@gmail.com>",
   "keywords": [
     "static file",

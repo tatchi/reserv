@@ -144,7 +144,7 @@ let directory = {
 };
 
 let rootFile = {
-  let doc = "Default file if no path";
+  let doc = "Default file to serve if no path (/).";
   Arg.(
     value
     & opt(string, "index.html")
@@ -153,7 +153,7 @@ let rootFile = {
 };
 
 let info = {
-  let doc = "static files server";
+  let doc = "Start a static file server";
   let man = [
     `S(Manpage.s_bugs),
     `P("File bug reports at https://github.com/tatchi/reserv"),

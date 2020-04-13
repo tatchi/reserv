@@ -1,55 +1,52 @@
-# reserv
+# Reserv
 
-A project which demonstrates a Reason workflow with [Esy][]. 
+Static file server with auto-reloading written in reason native. This project is heavily inspired by [servor](https://github.com/lukejacksonn/servor) but not as polished and without all the nice features it comes with. I built this mostly for fun and learning so if you need something robust, definitely reach out for something else. There are great alternatives such as [servor](https://github.com/lukejacksonn/servor), [sirv](https://github.com/lukeed/sirv/tree/master/packages/sirv-cli) or [serve](https://github.com/zeit/serve).
 
-[esy]: https://github.com/esy/esy
+## Install
+
+```
+$ npm install --save reserv
+```
+
+> **Note:** This module can also be installed and used globally
 
 ## Usage
 
-You need Esy, you can install the beta using [npm](https://npmjs.com):
+```
+$ reserv --help
+NAME
+       reserv - Start a static file server
 
-    % npm install -g esy@latest
+SYNOPSIS
+       reserv [OPTION]... [DIRECTORY]
 
-> NOTE: Make sure `esy --version` returns at least `0.5.8` for this project to build.
+ARGUMENTS
+       DIRECTORY (absent=.)
+           Directory to serve
 
-Then run the `esy` command from this project root to install and build depenencies.
+OPTIONS
+       -p PORT, --port=PORT (absent=8000)
+           Port the server will be running on.
 
-    % esy
+       -r ROOT_FILE, --rootFile=ROOT_FILE (absent=index.html)
+           Default file to serve if no path (/).
 
-Now you can run your editor within the environment (which also includes merlin):
+BUGS
+       File bug reports at https://github.com/tatchi/reserv
 
-    % esy $EDITOR
-    % esy vim
+COMMON OPTIONS
+       --help[=FMT] (default=auto)
+           Show this help in format FMT. The value FMT must be one of `auto',
+           `pager', `groff' or `plain'. With `auto', the format is `pager` or
+           `plain' whenever the TERM env var is `dumb' or undefined.
 
-Alternatively you can try [vim-reasonml](https://github.com/jordwalke/vim-reasonml)
-which loads esy project environments automatically.
+       --version
+           Show version information.
 
-After you make some changes to source code, you can re-run project's build
-again with the same simple `esy` command.
+```
 
-    % esy
+### Example
 
-And test compiled executable (runs `scripts.tests` specified in
-`package.json`):
-
-    % esy test
-
-Documentation for the libraries in the project can be generated with:
-
-    % esy doc
-    % open-cli `esy echo '#{self.target_dir}/default/_doc/_html/index.html'`
-    
-This assumes you have a command like [open-cli](https://github.com/sindresorhus/open-cli) installed on your system.
-
-Shell into environment:
-
-    % esy shell
-
-## Create Prebuilt Release:
-
-`esy` allows creating prebuilt binary packages for your current platform, with
-no dependencies.
-
-    % esy npm-release
-    % cd _release
-    % npm publish
+```bash
+reserv build -p 8000 -r index.html
+```
