@@ -23,7 +23,7 @@
     "NOTE": "Optional release Section. Customizes result of `esy release`",
     "release": {
       "releasedBinaries": [
-        "ReservApp.exe"
+        "reserv"
       ]
     },
     "buildEnv": {
@@ -78,12 +78,12 @@
         "Cmdliner = require('cmdliner')"
       ],
       "bin": {
-        "ReservApp.exe": "ReservApp.re"
+        "reserv": "ReservApp.re"
       }
     }
   },
   "scripts": {
-    "start": "esy x ReservApp.exe",
+    "start": "esy x reserv",
     "test": "esy x RunReservTests.exe",
     "format": "dune build @fmt --auto-promote --root .",
     "doc": "esy dune build @doc",
