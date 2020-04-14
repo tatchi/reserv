@@ -24,6 +24,10 @@
     "release": {
       "releasedBinaries": [
         "reserv"
+      ],
+      "includePackages": [
+        "root",
+        "esy-openssl"
       ]
     },
     "buildEnv": {
