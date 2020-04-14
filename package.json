@@ -27,8 +27,9 @@
       ],
       "includePackages": [
         "root",
-        "esy-openssl"
-      ]
+        "@reason-native-web/esy-openssl"
+      ],
+      "rewritePrefix": true
     },
     "buildEnv": {
       "ODOC_SYNTAX": "re"
@@ -114,8 +115,5 @@
     "@opam/merlin": "*",
     "ocaml": "~4.8.0",
     "@opam/odoc": "*"
-  },
-  "resolutions": {
-    "yarn-pkg-config": "esy-ocaml/yarn-pkg-config#34947ac97f898c8a94b1731df45aea16f8fc7b3c"
   }
 }
