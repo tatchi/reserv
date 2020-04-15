@@ -115,5 +115,8 @@
     "@opam/merlin": "*",
     "ocaml": "~4.8.0",
     "@opam/odoc": "*"
+  },
+  "resolutions": {
+    "@opam/mtime": "tatchi/mtime:opam#708773c"
   }
 }
