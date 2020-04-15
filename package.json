@@ -117,6 +117,6 @@
     "@opam/odoc": "*"
   },
   "resolutions": {
-    "@opam/mtime": "tatchi/mtime:opam#708773c"
+    "@opam/mtime": "tatchi/mtime:opam#dd111a477a913e82f9a5bfd5c105c19cb94a3a65"
   }
 }
