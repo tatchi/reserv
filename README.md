@@ -54,4 +54,3 @@ reserv build -p 8000 -r index.html
 # Credit ❤️
 
 Thanks to [ulrikstrid](https://github.com/ulrikstrid) and [aantron](https://github.com/aantron) for their awesome libraries ([morph](https://github.com/reason-native-web/morph) & [luv](https://github.com/aantron/luv))
-
