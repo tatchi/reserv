@@ -38,3 +38,4 @@ jobs:
 
       - name: Build docs
         run: esy doc
+        if: matrix.os != 'windows-latest'
