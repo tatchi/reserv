@@ -33,11 +33,11 @@
         "@reason-native/pastel@0.3.0@d41d8cd9",
         "@reason-native/console@0.1.0@d41d8cd9",
         "@reason-native-web/morph_server_http@0.3.6@d41d8cd9",
-        "@reason-native-web/morph_base@0.3.6@d41d8cd9",
-        "@reason-native-web/morph@0.3.6@d41d8cd9",
+        "@reason-native-web/morph_base@0.3.4@d41d8cd9",
+        "@reason-native-web/morph@0.3.5@d41d8cd9",
         "@pesy/esy-pesy@0.1.0-alpha.8@d41d8cd9",
         "@opam/uri@opam:3.1.0@d38ac0ae", "@opam/mtime@opam:1.2.0@acd670b8",
-        "@opam/luv@opam:0.5.1@a530d73c", "@opam/dune@opam:2.5.1@a0c1e658",
+        "@opam/luv@opam:0.5.2@bfb5a32a", "@opam/dune@opam:2.5.1@a0c1e658",
         "@opam/cmdliner@opam:1.0.4@93208aac",
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
@@ -235,10 +235,10 @@
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9",
         "@reason-native-web/morph_server_base@0.3.6@d41d8cd9",
-        "@reason-native-web/morph@0.3.6@d41d8cd9",
-        "@reason-native-web/h1-lwt-unix@1.1.0@d41d8cd9",
-        "@reason-native-web/h1-lwt@1.1.0@d41d8cd9",
-        "@reason-native-web/h1@1.1.0@d41d8cd9",
+        "@reason-native-web/morph@0.3.5@d41d8cd9",
+        "@reason-native-web/h1-lwt-unix@1.1.1002@d41d8cd9",
+        "@reason-native-web/h1-lwt@1.1.1001@d41d8cd9",
+        "@reason-native-web/h1@1.1.1001@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/logs@opam:0.7.0@1d03143e",
         "@opam/fmt@opam:0.8.8@01c3a23c", "@opam/dune@opam:2.5.1@a0c1e658",
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
@@ -258,26 +258,26 @@
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9",
-        "@reason-native-web/morph_base@0.3.6@d41d8cd9",
-        "@reason-native-web/morph@0.3.6@d41d8cd9",
+        "@reason-native-web/morph_base@0.3.4@d41d8cd9",
+        "@reason-native-web/morph@0.3.5@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658",
         "@esy-ocaml/reason@3.6.0@d41d8cd9"
       ],
       "devDependencies": []
     },
-    "@reason-native-web/morph_base@0.3.6@d41d8cd9": {
-      "id": "@reason-native-web/morph_base@0.3.6@d41d8cd9",
+    "@reason-native-web/morph_base@0.3.4@d41d8cd9": {
+      "id": "@reason-native-web/morph_base@0.3.4@d41d8cd9",
       "name": "@reason-native-web/morph_base",
-      "version": "0.3.6",
+      "version": "0.3.4",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/morph_base/-/morph_base-0.3.6.tgz#sha1:394437287396eddc41e71a42671f5a83643c59b4"
+          "archive:https://registry.npmjs.org/@reason-native-web/morph_base/-/morph_base-0.3.4.tgz#sha1:dc1fe2604360124f8a3efcadcfbdbe38c0a22c4f"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@reason-native-web/morph@0.3.6@d41d8cd9",
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native-web/morph@0.3.5@d41d8cd9",
         "@opam/magic-mime@opam:1.1.2@980f82fb",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/logs@opam:0.7.0@1d03143e",
         "@opam/hmap@opam:0.8.1@87a77ebe", "@opam/fmt@opam:0.8.8@01c3a23c",
@@ -285,14 +285,14 @@
       ],
       "devDependencies": []
     },
-    "@reason-native-web/morph@0.3.6@d41d8cd9": {
-      "id": "@reason-native-web/morph@0.3.6@d41d8cd9",
+    "@reason-native-web/morph@0.3.5@d41d8cd9": {
+      "id": "@reason-native-web/morph@0.3.5@d41d8cd9",
       "name": "@reason-native-web/morph",
-      "version": "0.3.6",
+      "version": "0.3.5",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/morph/-/morph-0.3.6.tgz#sha1:39ef7bda8d3528b62680dfda358e7f3a8b5f6e57"
+          "archive:https://registry.npmjs.org/@reason-native-web/morph/-/morph-0.3.5.tgz#sha1:90be44cd378045e35390d0aa0a1150aa64bba91d"
         ]
       },
       "overrides": [],
@@ -323,52 +323,52 @@
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h1-lwt-unix@1.1.0@d41d8cd9": {
-      "id": "@reason-native-web/h1-lwt-unix@1.1.0@d41d8cd9",
+    "@reason-native-web/h1-lwt-unix@1.1.1002@d41d8cd9": {
+      "id": "@reason-native-web/h1-lwt-unix@1.1.1002@d41d8cd9",
       "name": "@reason-native-web/h1-lwt-unix",
-      "version": "1.1.0",
+      "version": "1.1.1002",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h1-lwt-unix/-/h1-lwt-unix-1.1.0.tgz#sha1:5bf26ececa1d22e49496436ab63efbcbd7ca9e8c"
+          "archive:https://registry.npmjs.org/@reason-native-web/h1-lwt-unix/-/h1-lwt-unix-1.1.1002.tgz#sha1:b0a5b7f88fb6df65817de0050c432252585ed566"
         ]
       },
       "overrides": [],
       "dependencies": [
         "ocaml@4.8.1000@d41d8cd9",
         "@reason-native-web/lwt_ssl@1.1.3004@d41d8cd9",
-        "@reason-native-web/h1-lwt@1.1.0@d41d8cd9",
+        "@reason-native-web/h1-lwt@1.1.1001@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4",
         "@opam/faraday-lwt-unix@opam:0.7.1@4854f547",
         "@opam/dune@opam:2.5.1@a0c1e658"
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h1-lwt@1.1.0@d41d8cd9": {
-      "id": "@reason-native-web/h1-lwt@1.1.0@d41d8cd9",
+    "@reason-native-web/h1-lwt@1.1.1001@d41d8cd9": {
+      "id": "@reason-native-web/h1-lwt@1.1.1001@d41d8cd9",
       "name": "@reason-native-web/h1-lwt",
-      "version": "1.1.0",
+      "version": "1.1.1001",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h1-lwt/-/h1-lwt-1.1.0.tgz#sha1:88f6edd2a2374c17073c7852f795bad72b75950b"
+          "archive:https://registry.npmjs.org/@reason-native-web/h1-lwt/-/h1-lwt-1.1.1001.tgz#sha1:50a8323c451f8e4c7d1338f9da3137f8a21f738e"
         ]
       },
       "overrides": [],
       "dependencies": [
-        "ocaml@4.8.1000@d41d8cd9", "@reason-native-web/h1@1.1.0@d41d8cd9",
+        "ocaml@4.8.1000@d41d8cd9", "@reason-native-web/h1@1.1.1001@d41d8cd9",
         "@opam/lwt@opam:4.5.0@677655b4", "@opam/dune@opam:2.5.1@a0c1e658"
       ],
       "devDependencies": []
     },
-    "@reason-native-web/h1@1.1.0@d41d8cd9": {
-      "id": "@reason-native-web/h1@1.1.0@d41d8cd9",
+    "@reason-native-web/h1@1.1.1001@d41d8cd9": {
+      "id": "@reason-native-web/h1@1.1.1001@d41d8cd9",
       "name": "@reason-native-web/h1",
-      "version": "1.1.0",
+      "version": "1.1.1001",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://registry.npmjs.org/@reason-native-web/h1/-/h1-1.1.0.tgz#sha1:344b1cb1e7ea000a9f0f945757a06bcae01e67e1"
+          "archive:https://registry.npmjs.org/@reason-native-web/h1/-/h1-1.1.1001.tgz#sha1:1192171d216bbbede8f941490034e3b9f91e80de"
         ]
       },
       "overrides": [],
@@ -1292,20 +1292,20 @@
         "@opam/dune@opam:2.5.1@a0c1e658"
       ]
     },
-    "@opam/luv@opam:0.5.1@a530d73c": {
-      "id": "@opam/luv@opam:0.5.1@a530d73c",
+    "@opam/luv@opam:0.5.2@bfb5a32a": {
+      "id": "@opam/luv@opam:0.5.2@bfb5a32a",
       "name": "@opam/luv",
-      "version": "opam:0.5.1",
+      "version": "opam:0.5.2",
       "source": {
         "type": "install",
         "source": [
-          "archive:https://opam.ocaml.org/cache/md5/1b/1b1665a64412af2a65587a6aa4a42d4a#md5:1b1665a64412af2a65587a6aa4a42d4a",
-          "archive:https://github.com/aantron/luv/releases/download/0.5.1/luv-0.5.1.tar.gz#md5:1b1665a64412af2a65587a6aa4a42d4a"
+          "archive:https://opam.ocaml.org/cache/md5/a1/a196396b63bbe9ff9e8b932b58010b18#md5:a196396b63bbe9ff9e8b932b58010b18",
+          "archive:https://github.com/aantron/luv/releases/download/0.5.2/luv-0.5.2.tar.gz#md5:a196396b63bbe9ff9e8b932b58010b18"
         ],
         "opam": {
           "name": "luv",
-          "version": "0.5.1",
-          "path": "esy.lock/opam/luv.0.5.1"
+          "version": "0.5.2",
+          "path": "esy.lock/opam/luv.0.5.2"
         }
       },
       "overrides": [],
